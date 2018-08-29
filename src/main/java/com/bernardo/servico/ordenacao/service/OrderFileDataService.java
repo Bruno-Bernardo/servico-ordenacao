@@ -1,7 +1,9 @@
 package com.bernardo.servico.ordenacao.service;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.bernardo.servico.ordenacao.model.Book;
 
@@ -24,8 +26,24 @@ public class OrderFileDataService {
                 return "DESC";
             }
         }
-        throw new Exception("Invalid order param, excepted: ASC or DESC");
+        throw new Exception("Invalid order parameter. The parameter must contain: ASC or DESC");
     }
+    
+    public String validateFilter(String filter) throws Exception {
+    	filter = Normalizer.normalize(filter, Normalizer.Form.NFD);
+    	filter = filter.replaceAll("[^\\p{ASCII}]", "");
+    	if (filter != null && !filter.isEmpty()) {
+            if (filter.toUpperCase().contains("TITULO")) {
+                return "TITULO";
+            } else if (filter.toUpperCase().contains("AUTOR")) {
+                return "AUTOR";
+            } else if (filter.toUpperCase().contains("EDICAO")) {
+                return "EDICAO";
+            }
+        }
+        throw new Exception("Invalid atribute parameter. The parameter must contain: TITULO, AUTOR or EDICAO");
+    }
+    
     // validateOrderParam(String param); param = atributos dos livros
     
     /**
@@ -33,8 +51,19 @@ public class OrderFileDataService {
      * @param orderByFilter
      * @return List<Book>
      */
-    public List<Book> orderBy(Map<String,String> orderByFilter){ // o map define o campo e a ordem que devera ser seguida
+    public List<Book> orderBy(List<Book> books, Map<String,String> orderByFilter){ // o map define o campo e a ordem que devera ser seguida
+    	Stream<Book> streamBooks = books.stream();
+    	for(Map.Entry<String,String> sortOpition : orderByFilter.entrySet()) {
+    		streamBooks = streamBooks.sorted();
+    	}
     	
-    	return null;//nao pode deixar null
+    	
+    	
+    	try {
+    		books = (List<Book>) streamBooks;//TODO PROVEVELMENTE NÃO É A MELHOR MANEIRA DE SE FAZER A CONVERSÃO DO TIPO
+    	}catch(ClassCastException e){
+    		e.printStackTrace(); //TODO CRIAR NOVO EXCEPTION
+    	}
+    	return books;
     }
 }

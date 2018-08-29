@@ -3,12 +3,12 @@ package com.bernardo.servico.ordenacao.model;
 public class Book {
 	private String titulo;
 	private String autor;
-	private String edicao;
+	private int edicao;
 	
 	public Book() {
 	}
 	
-	public Book(String titulo, String autor, String edicao) {
+	public Book(String titulo, String autor, int edicao) {
 		super();
 		this.titulo = titulo;
 		this.autor = autor;
@@ -26,10 +26,10 @@ public class Book {
 	public void setAutor(String autor) {
 		this.autor = autor;
 	}
-	public String getEdicao() {
+	public int getEdicao() {
 		return edicao;
 	}
-	public void setEdicao(String edicao) {
+	public void setEdicao(int edicao) {
 		this.edicao = edicao;
 	}
 	
