@@ -3,7 +3,7 @@ package com.bernardo.servico.ordenacao.model;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class testBook {
+public class TestBook {
 
 	@Test
 	public void testToString() {
