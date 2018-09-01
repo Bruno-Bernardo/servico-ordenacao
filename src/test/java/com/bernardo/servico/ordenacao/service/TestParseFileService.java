@@ -1,9 +1,7 @@
 package com.bernardo.servico.ordenacao.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -22,18 +20,15 @@ public class TestParseFileService {
 		expected.add(new Book("Patterns of Enterprise Application Architecture", "Martin Fowler", 2002));
 		expected.add(new Book("Head First Design Patterns", "Elisabeth Freeman", 2004));
 		expected.add(new Book("Internet & World Wide Web: How to Program", "Deitel & Deitel", 2007));
-		System.out.println("result:");
-		List<Book> result = parseFileService.getParseCSV("books").stream().map(e -> new Book(e.getTitulo(), e.getAutor(), e.getEdicao())).collect(Collectors.toCollection(ArrayList::new));
-		result.forEach(System.out::println);
-		System.out.println("expected:");
-		expected.forEach(System.out::println);
+		List<Book> result = parseFileService.getParseCSV("books").stream().map(e -> new Book(e.getTitle(), e.getAuthor(), e.getEdition())).collect(Collectors.toCollection(ArrayList::new));
 		
-		expected.forEach(p -> {
-		    Book book = result.stream().filter(
-		        pe -> pe.getTitulo().equals(p.getTitulo())
-		    ).findAny().orElseThrow(() -> new AssertionError("Product: " + p.getTitulo() + " not found!"));
-		    Assert.assertEquals(p.getTitulo(), book.getTitulo());
-		}); 
+		String resultString = result.stream()
+				.map(Book::toString)
+				.collect(Collectors.joining());
+		String expectedString = expected.stream()
+				.map(Book::toString)
+				.collect(Collectors.joining());
+		Assert.assertTrue(expectedString.equals(resultString));
 	}
 	// TODO a comparação do resultado que não funciona
 
@@ -44,7 +39,7 @@ public class TestParseFileService {
 		expected.add(new Book("Patterns of Enterprise Application Architecture", "Martin Fowler", 2002));
 		expected.add(new Book("Head First Design Patterns", "Elisabeth Freeman", 2004));
 		expected.add(new Book("Internet & World Wide Web: How to Program", "Deitel & Deitel", 2007));
-		List<Book> result = parseFileService.getParseCSV("books").stream().map(e -> new Book(e.getTitulo(), e.getAutor(), e.getEdicao())).collect(Collectors.toCollection(ArrayList::new));
+		List<Book> result = parseFileService.getParseCSV("books").stream().map(e -> new Book(e.getTitle(), e.getAuthor(), e.getEdition())).collect(Collectors.toCollection(ArrayList::new));
 		
 		Assert.assertEquals(expected.size(), result.size());
 	}
@@ -60,7 +55,7 @@ public class TestParseFileService {
 		String csvFileName = "book";
 		Assert.assertNotNull(parseFileService.getParseCSV(csvFileName));
 	}
-	
+
 	@Test
 	public void testGetParseCSV05() throws Exception {
 		List<Book> expected = new ArrayList<Book>();
@@ -87,5 +82,6 @@ public class TestParseFileService {
 		String csvFileName = "books";
 		Assert.assertNotNull(parseFileService.findFile(csvFileName));
 	}
+
 
 }

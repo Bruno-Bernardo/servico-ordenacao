@@ -1,46 +1,46 @@
 package com.bernardo.servico.ordenacao.model;
 
 public class Book {
-	private String titulo;
-	private String autor;
-	private int edicao;
+	private String title;
+	private String author;
+	private int edition;
 
 	public Book() {
 	}
 
-	public Book(String titulo, String autor, int edicao) {
+	public Book(String titulo, String author, int edition) {
 		super();
-		this.titulo = titulo;
-		this.autor = autor;
-		this.edicao = edicao;
+		this.title = titulo;
+		this.author = author;
+		this.edition = edition;
 	}
 
-	public String getTitulo() {
-		return titulo;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+	public void setTitle(String titulo) {
+		this.title = titulo;
 	}
 
-	public String getAutor() {
-		return autor;
+	public String getAuthor() {
+		return author;
 	}
 
-	public void setAutor(String autor) {
-		this.autor = autor;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
-	public int getEdicao() {
-		return edicao;
+	public int getEdition() {
+		return edition;
 	}
 
-	public void setEdicao(int edicao) {
-		this.edicao = edicao;
+	public void setEdition(int edition) {
+		this.edition = edition;
 	}
 
 	@Override
 	public String toString() {
-		return "Titulo: " + titulo + ", Autor: " + autor + ", Edicao: " + edicao + ";";
+		return "Title: " + title + ", Author: " + author + ", Edition: " + edition + ";";
 	}
 }
