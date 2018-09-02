@@ -1,5 +1,9 @@
 package com.bernardo.servico.ordenacao.model;
 
+/**
+ * @author bbbru
+ *
+ */
 public class Book {
 	private String title;
 	private String author;

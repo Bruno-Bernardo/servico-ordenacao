@@ -44,101 +44,99 @@ public class SortingService {
 	 * accents
 	 * 
 	 * @param String
-	 *            filter to be validated
-	 * @return String filter validated: TITLE, AUTHOR or EDITION
+	 *            attribute to be validated
+	 * @return String attribute validated: TITLE, AUTHOR or EDITION
 	 * @throws Exception
 	 *             when parameter is null, empty or not contains TITLE, AUTHOR or
 	 *             EDITION
 	 */
-	public String validateAtribute(String atribute) throws SortingServiceException {
-		atribute = Normalizer.normalize(atribute, Normalizer.Form.NFD);
-		atribute = atribute.replaceAll("[^\\p{ASCII}]", "");
-		if (atribute != null && !atribute.isEmpty()) {
-			if (atribute.toUpperCase().contains("TITLE")) {
+	public String validateAttribute(String attribute) throws SortingServiceException {
+		attribute = Normalizer.normalize(attribute, Normalizer.Form.NFD);
+		attribute = attribute.replaceAll("[^\\p{ASCII}]", "");
+		if (attribute != null && !attribute.isEmpty()) {
+			if (attribute.toUpperCase().contains("TITLE")) {
 				return "TITLE";
-			} else if (atribute.toUpperCase().contains("AUTHOR")) {
+			} else if (attribute.toUpperCase().contains("AUTHOR")) {
 				return "AUTHOR";
-			} else if (atribute.toUpperCase().contains("EDITION")) {
+			} else if (attribute.toUpperCase().contains("EDITION")) {
 				return "EDITION";
 			}
 		}
 		throw new SortingServiceException(
-				"Invalid atribute parameter. The parameter must contain: TITLE, AUTHOR or EDITION");
+				"Invalid attribute parameter. The parameter must contain: TITLE, AUTHOR or EDITION");
 	}
 
-	// validateOrderParam(String param); param = atributos dos livros
 
 	/**
 	 * Returns a List<Book> with the objects in the order that was defined by the
-	 * parameter "orderByFilter"
+	 * parameter "orderByAttributeList"
 	 * 
-	 * @param orderByFilter
+	 * @param orderByAttribute
 	 * @return List<Book>
 	 */
-	public List<Book> sortBy(List<Book> booksList, Map<String, String> orderByFilterList)
+	public List<Book> sortBy(List<Book> booksList, Map<String, String> orderByAttributeList)
 			throws SortingServiceException {
-		Comparator<Book> comparator = createComparator(orderByFilterList);
-		List<Book> booksListResult = new ArrayList<Book>();
+		Comparator<Book> comparator = createComparator(orderByAttributeList);
 		if(comparator != null) {
-			booksListResult = booksList.stream().sorted()
+			return booksList.stream().sorted(comparator)
 				.collect(Collectors.toCollection(ArrayList::new));
 		}
-		return booksListResult;
+		return new ArrayList<Book>();
 	}
 
 	/**
-	 * Uses a Map<String,String> orderByFilterList to return Comparator<Book>, where
+	 * Uses a Map<String,String> orderByAttributeList to return Comparator<Book>, where
 	 * the key value must contain TITLE, AUTHOR or EDITION indicating the attribute
 	 * to be filtered and the value must contain ASC or DESC indicating the order of
 	 * the attribute.
 	 * 
 	 * @return Comparator<Book>
 	 */
-	public Comparator<Book> createComparator(Map<String, String> orderByFilterList) throws SortingServiceException {
+	public Comparator<Book> createComparator(Map<String, String> orderByAttributeList) throws SortingServiceException{
 		Comparator<Book> orderByTitle = Comparator.comparing(Book::getTitle);
 		Comparator<Book> orderByAutor = Comparator.comparing(Book::getAuthor);
-		Comparator<Book> orderByEdicao = Comparator.comparing(Book::getEdition);
+		Comparator<Book> orderByEdition = Comparator.comparing(Book::getEdition);
 		Comparator<Book> comparator = null;
 		int i = 0;
-		if (orderByFilterList != null && !orderByFilterList.isEmpty()) {
-			for (Map.Entry<String, String> orderByFilter : orderByFilterList.entrySet()) {
+		if (orderByAttributeList != null && !orderByAttributeList.isEmpty()) {
+			for (Map.Entry<String, String> orderByAttribute : orderByAttributeList.entrySet()) {
 				try {
-					String validatedOrder = validateOrder(orderByFilter.getValue());
-					String validatedFilter = validateAtribute(orderByFilter.getKey());
+					String validatedOrder = validateOrder(orderByAttribute.getValue());
+					String validatedAttribute = validateAttribute(orderByAttribute.getKey());
 					if (i == 0) {
 						if (validatedOrder.equals("ASC")) {
-							if (validatedFilter.equals("TITLE")) {
+							if (validatedAttribute.equals("TITLE")) {
 								comparator = orderByTitle;
-							} else if (validatedFilter.equals("AUTHOR")) {
+							} else if (validatedAttribute.equals("AUTHOR")) {
 								comparator = orderByAutor;
-							} else if (validatedFilter.equals("EDITION")) {
-								comparator = orderByEdicao;
+							} else if (validatedAttribute.equals("EDITION")) {
+								comparator = orderByEdition;
 							}
 						} else if (validatedOrder.equals("DESC")) {
-							if (validatedFilter.equals("TITLE")) {
+							if (validatedAttribute.equals("TITLE")) {
 								comparator = orderByTitle.reversed();
-							} else if (validatedFilter.equals("AUTHOR")) {
+							} else if (validatedAttribute.equals("AUTHOR")) {
 								comparator = orderByAutor.reversed();
-							} else if (validatedFilter.equals("EDITION")) {
-								comparator = orderByEdicao.reversed();
+							} else if (validatedAttribute.equals("EDITION")) {
+								comparator = orderByEdition.reversed();
 							}
 						}
 					} else {
 						if (validatedOrder.equals("ASC")) {
-							if (validatedFilter.equals("TITLE")) {
+							if (validatedAttribute.equals("TITLE")) {
 								comparator = comparator.thenComparing(orderByTitle);
-							} else if (validatedFilter.equals("AUTHOR")) {
-								comparator = comparator.thenComparing(orderByTitle);
-							} else if (validatedFilter.equals("EDITION")) {
-								comparator = comparator.thenComparing(orderByTitle);
+							} else if (validatedAttribute.equals("AUTHOR")) {
+								comparator = comparator.thenComparing(orderByAutor);
+							} else if (validatedAttribute.equals("EDITION")) {
+								comparator = comparator.thenComparing(orderByEdition);
 							}
 						} else if (validatedOrder.equals("DESC")) {
-							if (validatedFilter.equals("TITLE")) {
+							if (validatedAttribute.equals("TITLE")) {
 								comparator = comparator.thenComparing(orderByTitle.reversed());
-							} else if (validatedFilter.equals("AUTHOR")) {
+							} else if (validatedAttribute.equals("AUTHOR")) {
 								comparator = comparator.thenComparing(orderByAutor.reversed());
-							} else if (validatedFilter.equals("EDITION")) {
-								comparator = comparator.thenComparing(orderByEdicao.reversed());
+							} else if (validatedAttribute.equals("EDITION")) {
+								comparator = comparator.thenComparing(orderByEdition.reversed());
 							}
 						}
 					}
@@ -148,9 +146,9 @@ public class SortingService {
 				i++;
 			}
 			return comparator;
-		}else if(orderByFilterList != null && orderByFilterList.isEmpty()) {
+		}else if(orderByAttributeList != null && orderByAttributeList.isEmpty()) {
 			return null;
 		}
-		throw new SortingServiceException("The order cannot be empty or null");
+		throw new SortingServiceException("The order cannot be null");
 	}
 }

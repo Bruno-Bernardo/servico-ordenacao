@@ -3,7 +3,6 @@ package com.bernardo.servico.ordenacao.service;
 import static java.util.Comparator.comparing;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,42 +52,42 @@ public class TestSortingService {
 	@Test
 	public void testValidateAtribute01() throws Exception {
 		String expected = "TITLE";
-		String result = orderFileDataService.validateAtribute("title");
+		String result = orderFileDataService.validateAttribute("title");
 		Assert.assertEquals(expected, result);
 	}
 
 	@Test(expected = Exception.class)
 	public void testValidateAtribute02() throws Exception {
 		String expected = "TITLE";
-		String result = orderFileDataService.validateAtribute("ttle");
+		String result = orderFileDataService.validateAttribute("ttle");
 		Assert.assertEquals(expected, result);
 	}
 
 	@Test
 	public void testValidateAtribute03() throws Exception {
 		String expected = "AUTHOR";
-		String result = orderFileDataService.validateAtribute("autHor");
+		String result = orderFileDataService.validateAttribute("autHor");
 		Assert.assertEquals(expected, result);
 	}
 
 	@Test(expected = Exception.class)
 	public void testValidateAtribute04() throws Exception {
 		String expected = "AUTHOR";
-		String result = orderFileDataService.validateAtribute("Autro");
+		String result = orderFileDataService.validateAttribute("Autro");
 		Assert.assertEquals(expected, result);
 	}
 
 	@Test
 	public void testValidateAtribute05() throws Exception {
 		String expected = "EDITION";
-		String result = orderFileDataService.validateAtribute("EDItiOn");
+		String result = orderFileDataService.validateAttribute("EDItiOn");
 		Assert.assertEquals(expected, result);
 	}
 
-	@Test(expected = Exception.class)
+	@Test (expected = Exception.class)
 	public void testValidateAtribute06() throws Exception {
 		String expected = "EDICAO";
-		String result = orderFileDataService.validateAtribute("edtion");
+		String result = orderFileDataService.validateAttribute("edtion");
 		Assert.assertEquals(expected, result);
 	}
 
@@ -225,7 +224,6 @@ public class TestSortingService {
 	
 	@Test
 	public void testSortBy06() throws SortingServiceException{
-		List<Book> expected = new ArrayList<Book>();
 		List<Book> books = new ArrayList<Book>();
 		books.add(new Book("Java How to Program", "Deitel & Deitel", 2007));
 		books.add(new Book("Patterns of Enterprise Application Architecture", "Martin Fowler", 2002));
@@ -233,6 +231,23 @@ public class TestSortingService {
 		books.add(new Book("Internet & World Wide Web: How to Program", "Deitel & Deitel", 2007));
 
 		Map<String, String> order = new LinkedHashMap<String, String>();
+		
+		List<Book> result = orderFileDataService.sortBy(books, order);
+		
+		Assert.assertTrue(result.isEmpty());
+		
+	}
+	
+	@Test(expected = SortingServiceException.class)
+	public void testSortBy07() throws SortingServiceException{
+		List<Book> expected = new ArrayList<Book>();
+		List<Book> books = new ArrayList<Book>();
+		books.add(new Book("Java How to Program", "Deitel & Deitel", 2007));
+		books.add(new Book("Patterns of Enterprise Application Architecture", "Martin Fowler", 2002));
+		books.add(new Book("Head First Design Patterns", "Elisabeth Freeman", 2004));
+		books.add(new Book("Internet & World Wide Web: How to Program", "Deitel & Deitel", 2007));
+
+		Map<String, String> order = null;
 		
 		List<Book> result = orderFileDataService.sortBy(books, order);
 		

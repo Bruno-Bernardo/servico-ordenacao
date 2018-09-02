@@ -16,6 +16,14 @@ import com.bernardo.servico.ordenacao.model.Book;
  */
 public class ParseFileService {
 
+	/**
+	 * Returns a list of books that haves in the csv file, witch must be inside the resources folder of the project.
+	 * The CSV file must contain three columns, Title, Author and Edition.
+	 * 
+	 * @param csvFileName
+	 * @return List<Book>
+	 * @throws Exception
+	 */
 	public List<Book> getParseCSV(String csvFileName) throws Exception {
 
 		String line = "";
@@ -33,11 +41,35 @@ public class ParseFileService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param csvFileName
+	 * @return CSV File
+	 * @throws Exception
+	 */
 	public File findFile(String csvFileName) throws Exception {
+		csvFileName = validateCsvFileName(csvFileName);
 		try {
-			return Paths.get(ClassLoader.getSystemResource(csvFileName + ".csv").toURI()).toFile();
+			return Paths.get(ClassLoader.getSystemResource(csvFileName).toURI()).toFile();
 		} catch (Exception e) {
-			throw new Exception("Cannot find file with the name:" + csvFileName + ".csv");
+			throw new Exception("Cannot find file with the name:" + csvFileName);
 		}
+	}
+	
+	/**
+	 * Validates if the CSV file haves extension and return the correct name text 
+	 * @param csvFileName
+	 * @return String
+	 * @throws Exception
+	 */
+	public String validateCsvFileName(String csvFileName) throws Exception{
+		if (csvFileName != null && !csvFileName.isEmpty()) {
+			if (csvFileName.toUpperCase().contains(".CSV")) {
+				return csvFileName;
+			}else{
+				return csvFileName+".csv";
+			}
+		}
+		throw new Exception("CSV file name cannot be null or empty");
 	}
 }

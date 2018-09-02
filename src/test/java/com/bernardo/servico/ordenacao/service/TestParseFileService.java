@@ -9,6 +9,10 @@ import org.junit.Test;
 
 import com.bernardo.servico.ordenacao.model.Book;
 
+/**
+ * @author bbbru
+ *
+ */
 public class TestParseFileService {
 
 	private final ParseFileService parseFileService = new ParseFileService();
@@ -30,7 +34,6 @@ public class TestParseFileService {
 				.collect(Collectors.joining());
 		Assert.assertTrue(expectedString.equals(resultString));
 	}
-	// TODO a comparação do resultado que não funciona
 
 	@Test
 	public void testGetParseCSV02() throws Exception {
@@ -83,5 +86,20 @@ public class TestParseFileService {
 		Assert.assertNotNull(parseFileService.findFile(csvFileName));
 	}
 
+	@Test
+	public void testValidateCsvFileName01() throws Exception {
+		String csvFileName = "books";
+		String expected = "books.csv";
+		String result = parseFileService.validateCsvFileName(csvFileName);
+		Assert.assertEquals(expected,result);
+	}
+	
+	@Test
+	public void testValidateCsvFileName02() throws Exception {
+		String csvFileName = "books.csv";
+		String expected = "books.csv";
+		String result = parseFileService.validateCsvFileName(csvFileName);
+		Assert.assertEquals(expected,result);
+	}
 
 }
